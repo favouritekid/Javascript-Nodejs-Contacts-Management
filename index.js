@@ -9,6 +9,11 @@ ra kết quả) hoặc 1 phần số điện thoại
 const Contacts = require('./contacts');
 const Phones = require('./phones');
 const readlineSync = require('readline-sync');
+const fs = require('fs') //gọi buit-in module fs trong nodejs
+
+/*Đọc dữ liệu từ data.json */
+var contactList = fs.readFileSync('data.json');
+contactList = JSON.parse(contactList); //object
 
 function displayMenu(){
 	console.log('1.Hiển thị danh sách liên hệ\n2.Nhập liên hệ mới\n3.Sửa liên hệ\n4.Xóa liên hệ\n5.Tìm kiếm liên hệ\n0.Thoát chương trình\nVui long chọn một trong các tùy chọn trên!');
@@ -48,7 +53,7 @@ function displayMenu(){
 	}
 }
 function listContact(){
-	console.log('Danh sach');
+	console.log(contactList);
 }
 function addContact(){
 	console.log('Them');
