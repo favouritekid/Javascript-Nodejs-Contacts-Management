@@ -56,7 +56,35 @@ function listContact(){
 	console.log(contactList);
 }
 function addContact(){
-	console.log('Them');
+	var name = readlineSync.question('Nhập họ và tên:');
+	var email = readlineSync.question('Nhập email:');
+	var contact = new Contacts(name,email);
+	console.log(contact);
+	var totalPhone = readlineSync.question('Liên hệ ('+name+') có bao nhiêu số điện thoại:');
+	var phone = {};
+	for (var i = 0; i<totalPhone; i++) {
+		var label = readlineSync.question('Loại số di động:');
+		var phoneNumber = readlineSync.question('Số di động:');
+		phone[i] = new Phones(label,phoneNumber);
+	}
+/*const readlineSync = require('readline-sync');
+var phone = [];
+for (var i = 0; i<2; i++) {
+	var label = readlineSync.question('Loại số di động:');
+	var phoneNumber = readlineSync.question('Số di động:');
+	phone[i] = new Phones(label,phoneNumber);
+	phone.push(phone[i]);
+}
+console.log(phone);*/
+
+var objects = {};
+
+for (var x = 0; x < 100; x++) {
+  objects[x] = {name: etc};
+}
+
+
+
 }
 function editContact(){
 	console.log('Sua');
