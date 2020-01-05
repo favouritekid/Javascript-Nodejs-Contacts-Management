@@ -1,1 +1,1 @@
-[]
+[{ "a": "somestring",  "b": 42,  "c": false},{ "a": "somestring 2",  "b": 423,  "c": true}]

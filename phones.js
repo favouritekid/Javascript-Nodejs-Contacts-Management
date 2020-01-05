@@ -1,5 +1,5 @@
-function Phones (label,phoneNumber) {
+function Phone (label,phoneNumber) {
         this.label = label;
         this.phoneNumber = phoneNumber;
 }
-module.exports = Phones;
+module.exports = Phone;
