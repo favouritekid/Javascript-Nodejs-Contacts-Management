@@ -1,4 +1,5 @@
-function Contact (name,email) {
+function Contact (id,name,email) {
+    this.id = id;
     this.name = name;
     this.email = email;
     this.phones = [];
