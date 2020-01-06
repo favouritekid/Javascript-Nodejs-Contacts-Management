@@ -1,1 +1,1 @@
-[{ "a": "somestring",  "b": 42,  "c": false},{ "a": "somestring 2",  "b": 423,  "c": true}]
+[{"name":"Phạm Thái Hà","email":"hapham1388@gmail.com","phones":[{"label":"Mobile","phoneNumber":["0906513555","0815432345"]},{"label":"Phone","phoneNumber":["02622466879","02623505055"]}]},{"name":"Mai Ái Xuân Hương","email":"aixuanhuong89@gmail.com","phones":[{"label":"Mobile","phoneNumber":["09869877189"]},{"label":"Phone","phoneNumber":["02623813675"]}]}]
