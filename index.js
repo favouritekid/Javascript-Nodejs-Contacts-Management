@@ -9,7 +9,7 @@ ra kết quả) hoặc 1 phần số điện thoại
 const Contact = require('./contacts');
 const Phone = require('./phones');
 const readlineSync = require('readline-sync');
-const fs = require('fs') //gọi buit-in module fs trong nodejs
+const fs = require('fs') //Call buited-in module fs
 const filePath = './data.json';
 
 function displayMenu(){
@@ -49,7 +49,7 @@ function displayMenu(){
 	}
 }
 function readContact(path){
-	/*Đọc dữ liệu từ data.json */
+	/*Read content from data.json */
 	var contactList = fs.readFileSync(path);
 	return contactList = JSON.parse(contactList); //object
 }
@@ -72,7 +72,7 @@ function listContact(){
 function addContact(){
 	var name = readlineSync.question('Nhập họ và tên:');
 	var email = readlineSync.question('Nhập email:');
-	console.log('Nhập số điện thoại di động. Nếu có 2 số trở lên thì ngăn cách nhau bằng dấu phẩy(,)');
+	console.log('Nhập số điện thoại nếu có 2 số trở lên thì ngăn cách nhau bằng dấu phẩy(,)');
 	var numberOfMobile = readlineSync.question('Số di động:');
 	var numberOfPhone = readlineSync.question('Số điện thoại bàn:');
 	/*Delete backspace when user type then split it to array*/
