@@ -48,41 +48,41 @@ function displayMenu(){
 			break;			
 	}
 }
-function readContact(path){
-	/*Read content from data.json */
-	var contactList = fs.readFileSync(path);
-	return contactList = JSON.parse(contactList); //object
+/*Read content from data.json */
+function readContact(){
+	return JSON.parse(fs.readFileSync(filePath)); //object
 }
+/*Write content from data.json */
 function writeContact(content){
-	content = JSON.stringify(content);
-	fs.writeFileSync(filePath,content);
+	fs.writeFileSync(filePath,JSON.stringify(content));
 }
 function listContact(){
-	var content = readContact(filePath);
+	var content = readContact();
 	if(content.length ===0)	console.log(content);
 	else {
-		for(key in content) {
-		    if(content.hasOwnProperty(key)) {
-		        var value = content[key];
-		        console.log(value);
-		    }
+	console.log('Danh sách liên hệ:');
+		for(let i of content){
+			console.log('Id:'+i.id+'|'+ i.name + '|' + i.email);
+			for(let j of i.phones){
+				console.log('\t'+j.label, j.phoneNumber);
+			}
 		}
 	}
 }
+
 function addContact(){
+	var content = readContact();
 	var name = readlineSync.question('Nhập họ và tên:');
 	var email = readlineSync.question('Nhập email:');
-
-	var content = readContact(filePath);
+	/*Generate Id auto-increment*/
 	var id;
-	if((content[1].id in content)){
-		id = 1 + content[content.length-1].id;
-	} else id =1;
-
+	if(content.length===0){
+		id = 1;
+	} else id = 1 + content[content.length-1].id;
 	console.log('Nhập số điện thoại nếu có 2 số trở lên thì ngăn cách nhau bằng dấu phẩy(,)');
 	var numberOfMobile = readlineSync.question('Số di động:');
 	var numberOfPhone = readlineSync.question('Số điện thoại bàn:');
-	/*Delete backspace when user type then split it to array*/
+	/*Delete backspace when user type before split to array*/
 	numberOfMobile = (numberOfMobile.replace(/\s/g, '')).split(','); 
 	numberOfPhone = (numberOfPhone.replace(/\s/g, '')).split(',');
 	/*New phone constructor object*/
@@ -98,7 +98,7 @@ function addContact(){
 	console.log('Liên hệ vừa được tạo:\n');
 	console.log(contact);
 	/*Read file */
-	var content = readContact(filePath);
+	var content = readContact();
 	/*Push contact to content */
 	content.push(contact);
 	/*Write file */
@@ -106,10 +106,172 @@ function addContact(){
 }
 
 function editContact(){
-	console.log('Sua');
+	var content = readContact();
+	console.table(content,['id','name']);
+	var choose = parseInt(readlineSync.question('Chọn ID cần sửa:'));
+	
+	for(let i of content){
+		if(i.id === choose){
+			console.log('Vui lòng chọn thông  tin cần sửa:');
+			console.log('1. Họ và tên:'+ i.name);
+			console.log('2. Địa chỉ email:'+ i.email);
+			for(let j of i.phones){
+				if (j.label==='Mobile'){console.log('3. Số điện thoại '+ j.label, j.phoneNumber);}
+					else console.log('4. Số điện thoại '+ j.label, j.phoneNumber);
+			}
+		}
+	}
+	var choose2 = parseInt(readlineSync.question('Chọn nội dung cần sửa:'));
+	
+	switch (choose2) {
+		case 1:
+			var nameEdited = readlineSync.question('Nhập họ và tên:');
+			for(let i of content){
+				if(i.id === choose){
+					i.name = nameEdited;
+					writeContact(content);
+				}
+			}
+			break;
+		case 2:
+			var emailEdited = readlineSync.question('Nhập email:');
+			for(let i of content){
+				if(i.id === choose){
+					i.email = emailEdited;
+					writeContact(content);
+				}
+			}
+			break;
+		case 3:
+			for(let i of content){
+				if(i.id === choose){
+					for(let j of i.phones){
+						if (j.label==='Mobile'){
+							j.phoneNumber = j.phoneNumber.map((currElement,index)=>{
+								return '[ '+index+' ] '+currElement;
+							});
+							console.log('Danh sách số điện thoại '+j.label+' là:' + j.phoneNumber);
+						}
+					}
+				}	
+			}		
+			var mobileFix = readlineSync.question('1.Xóa \n2.Sửa. \n3.Thêm mới\nChọn:');			
+			switch (mobileFix) {
+				case '1':
+					var mobileIndex = readlineSync.question('Chọn vị trí số cần xóa:');
+					for(let i of content){
+						if(i.id === choose){
+							for(let j of i.phones){
+								if (j.label =='Mobile'){
+									j.phoneNumber.splice(mobileIndex,1);
+									j.phoneNumber = j.phoneNumber.map((currElement)=>{return currElement.slice(6)});		
+									writeContact(content);
+								}
+							}							
+						}
+					}
+					break;
+				case '2':
+					var mobileIndex = readlineSync.question('Chọn vị trí số cần sửa:');
+					for(let i of content){
+						if(i.id === choose){
+							for(let j of i.phones){
+								if (j.label =='Mobile'){
+									var mobileNumberEdited= readlineSync.question('Nhập vào nội dung cần sửa:');
+									j.phoneNumber = j.phoneNumber.map((currElement)=>{return currElement.slice(6)});		
+									j.phoneNumber[mobileIndex] = mobileNumberEdited;
+									writeContact(content);
+								}
+							}							
+						}
+					}					
+					break;
+				case '3':
+					var mobileAdded= readlineSync.question('Nhập số cần thêm:');
+					for(let i of content){
+						if(i.id === choose){
+							for(let j of i.phones){
+								if (j.label =='Mobile'){
+									j.phoneNumber = j.phoneNumber.map((currElement)=>{return currElement.slice(6)});		
+									j.phoneNumber.push(mobileAdded);
+									writeContact(content);
+								}
+							}							
+						}
+					}						
+					break;
+				default:
+					break;
+			}
+			break;
+		case 4:
+			for(let i of content){
+				if(i.id === choose){
+					for(let j of i.phones){
+						if (j.label==='Phone'){
+							j.phoneNumber = j.phoneNumber.map((currElement,index)=>{
+								return '[ '+index+' ] '+currElement;
+							});
+							console.log('Danh sách số điện thoại '+j.label+' là:' + j.phoneNumber);
+						}
+					}
+				}	
+			}		
+			var mobileFix = readlineSync.question('1.Xóa \n2.Sửa. \n3.Thêm mới\nChọn:');			
+			switch (mobileFix) {
+				case '1':
+					var mobileIndex = readlineSync.question('Chọn vị trí số cần xóa:');
+					for(let i of content){
+						if(i.id === choose){
+							for(let j of i.phones){
+								if (j.label =='Phone'){
+									j.phoneNumber.splice(mobileIndex,1);
+									j.phoneNumber = j.phoneNumber.map((currElement)=>{return currElement.slice(6)});		
+									writeContact(content);
+								}
+							}							
+						}
+					}
+					break;
+				case '2':
+					var mobileIndex = readlineSync.question('Chọn vị trí số cần sửa:');
+					for(let i of content){
+						if(i.id === choose){
+							for(let j of i.phones){
+								if (j.label =='Phone'){
+									var mobileNumberEdited= readlineSync.question('Nhập vào nội dung cần sửa:');
+									j.phoneNumber = j.phoneNumber.map((currElement)=>{return currElement.slice(6)});		
+									j.phoneNumber[mobileIndex] = mobileNumberEdited;
+									writeContact(content);
+								}
+							}							
+						}
+					}					
+					break;
+				case '3':
+					var mobileAdded= readlineSync.question('Nhập số cần thêm:');
+					for(let i of content){
+						if(i.id === choose){
+							for(let j of i.phones){
+								if (j.label =='Phone'){
+									j.phoneNumber = j.phoneNumber.map((currElement)=>{return currElement.slice(6)});		
+									j.phoneNumber.push(mobileAdded);
+									writeContact(content);
+								}
+							}							
+						}
+					}						
+					break;
+				default:
+					break;
+			}
+			break;
+		default:
+			break;
+	}
 }
 function deleteContact(){
-	var content = readContact(filePath);
+	var content = readContact();
 	var id = parseInt(readlineSync.question('Nhập ID cần xóa:'));
 	for(let i of content){
 		if(i.id === id){
@@ -118,34 +280,49 @@ function deleteContact(){
 	}
 	writeContact(content);
 }
-function searchContact(){
-	console.log('Tim kiem');
+function searchContact(content,findContent){
+	listContact();
+	var content = readContact();
+	let inputFind = readlineSync.question('Nhập nội dung cần tìm: ');
+	if (isNaN(inputFind)) {
+		let dataFinded = content.filter(data => {
+			return data.name.normalize('NFC').toLowerCase().indexOf(inputFind.normalize('NFC').toLowerCase()) > -1;
+		})
+		console.log(dataFinded.length === 0 ? "Can't find the contact" : dataFinded);
+	} else if (!isNaN(inputFind)) {
+		let dataFinded = dataContacts.filter(data => {
+			return data.phoneNumber.toString().indexOf(inputFind) > -1;
+		})
+		console.log(dataFinded.length === 0 ? "Can't find the contact" : dataFinded);
+	} else {
+		console.log('Input wrong');
+		findContact();
+	}
 }
-displayMenu();
-var obj = [
+
+var input = [
 			{'id':1,
-			'name':'Pham Thai Ha',
-			'email':'hapham1388@gmail.com',
+			'name':'Will Smith',
+			'email':'mailabc.com',
 			'phones':[
-						{'label':'Mobile','phoneNumber':['0906513555','0815432345']},
-						{'label':'Phone','phoneNumber':['02623505055','02622466879']}
+						{'label':'Mobile','phoneNumber':['0222222222','0222222222']},
+						{'label':'Phone','phoneNumber':['0222222222','0222222222']}
 					 ]
 		  	},
 			{'id':2,
-			'name':'Mai Ai Xuan Huong',
-			'email':'hapham1388@gmail.com',
+			'name':'Will Smith 2',
+			'email':'mailabc2@gmail.com',
 			'phones':[
-						{'label':'Mobile','phoneNumber':['0906513555','0815432345']},
-						{'label':'Phone','phoneNumber':['02623505055','02622466879']}
+						{'label':'Mobile','phoneNumber':['01111111111111','0222222222']},
+						{'label':'Phone','phoneNumber':['0222222222','0222222222']}
 					 ]
 		  	},
 			{'id':3,
-			'name':'Pham Dinh Bao',
-			'email':'hapham1388@gmail.com',
+			'name':'Will Smith 3',
+			'email':'mailabc3@gmail.com',
 			'phones':[
-						{'label':'Mobile','phoneNumber':['0906513555','0815432345']},
-						{'label':'Phone','phoneNumber':['02623505055','02622466879']}
+						{'label':'Mobile','phoneNumber':['0222222222','0222222222']},
+						{'label':'Phone','phoneNumber':['0222222222','0222222222']}
 					 ]
 		  	}
-		  ];
-
+];
