@@ -1,1 +1,45 @@
-[{"id":1,"name":"Phạm Thái Hà","email":"hapham1388@gmail.com","phones":[{"label":"Mobile","phoneNumber":["0906513555","0815432345"]},{"label":"Phone","phoneNumber":["02623505055","02622466879"]}]},{"id":2,"name":"Vàng Văn Tính","email":"tinhitk12@gmail.com","phones":[{"label":"Mobile","phoneNumber":["0946261213","0962435302"]},{"label":"Phone","phoneNumber":["02622466879","02628551556"]}]},{"id":3,"name":"Nguyễn Hoàng Trang","email":"hoangtrang.n@hotmail.com","phones":[{"label":"Mobile","phoneNumber":["0919721335","0915334879","0824397177","0818765777"]},{"label":"Phone","phoneNumber":["02623787649"]}]}]
+[ {
+    "id":1,
+    "name":"Nguyễn Công Phượng",
+    "email":"phuongcatcanh@gmail.com",
+    "phones":[ {
+        "label": "Mobile", "phoneNumber": ["0906577577", "0943999999"]
+    }
+    ,
+    {
+        "label": "Phone", "phoneNumber": ["02623571571", "02622367376"]
+    }
+    ]
+}
+
+,
+{
+    "id":2,
+    "name":"Lương Xuân Trường",
+    "email":"truonghip@gmail.com",
+    "phones":[ {
+        "label": "Mobile", "phoneNumber": ["097774567", "0988881230"]
+    }
+    ,
+    {
+        "label": "Phone", "phoneNumber": ["02583654889", "02658551556"]
+    }
+    ]
+}
+
+,
+{
+    "id":3,
+    "name":"Đặng Văn Lâm",
+    "email":"lamtaykhoaito@hotmail.com",
+    "phones":[ {
+        "label": "Mobile", "phoneNumber": ["0919721335", "0915334879", "0824397177", "0818765777"]
+    }
+    ,
+    {
+        "label": "Phone", "phoneNumber": ["02623787649"]
+    }
+    ]
+}
+
+]

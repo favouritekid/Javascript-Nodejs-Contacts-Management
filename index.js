@@ -17,7 +17,7 @@ function displayMenu(){
 	var choose = readlineSync.question('Chọn:');
 	switch(choose){
 		case '1':
-			listContact();
+			listContact(readContact());
 			displayMenu();
 			break;
 		case '2':
@@ -36,7 +36,7 @@ function displayMenu(){
 			displayMenu();
 			break;
 		case '5':
-			searchContact();
+			listContact(searchContact());
 			console.log('-------------------------');
 			displayMenu();
 			break;
@@ -56,8 +56,7 @@ function readContact(){
 function writeContact(content){
 	fs.writeFileSync(filePath,JSON.stringify(content));
 }
-function listContact(){
-	var content = readContact();
+function listContact(content){
 	if(content.length ===0)	console.log(content);
 	else {
 	console.log('Danh sách liên hệ:');
@@ -149,7 +148,7 @@ function editContact(){
 						if (j.label==='Mobile'){
 							j.phoneNumber = j.phoneNumber.map((currElement,index)=>{
 								return '[ '+index+' ] '+currElement;
-							});
+							});//insert index number before element of array
 							console.log('Danh sách số điện thoại '+j.label+' là:' + j.phoneNumber);
 						}
 					}
@@ -164,7 +163,7 @@ function editContact(){
 							for(let j of i.phones){
 								if (j.label =='Mobile'){
 									j.phoneNumber.splice(mobileIndex,1);
-									j.phoneNumber = j.phoneNumber.map((currElement)=>{return currElement.slice(6)});		
+									j.phoneNumber = j.phoneNumber.map((currElement)=>{return currElement.slice(6)});//delete index number		
 									writeContact(content);
 								}
 							}							
@@ -280,49 +279,15 @@ function deleteContact(){
 	}
 	writeContact(content);
 }
-function searchContact(content,findContent){
-	listContact();
-	var content = readContact();
-	let inputFind = readlineSync.question('Nhập nội dung cần tìm: ');
-	if (isNaN(inputFind)) {
-		let dataFinded = content.filter(data => {
-			return data.name.normalize('NFC').toLowerCase().indexOf(inputFind.normalize('NFC').toLowerCase()) > -1;
-		})
-		console.log(dataFinded.length === 0 ? "Can't find the contact" : dataFinded);
-	} else if (!isNaN(inputFind)) {
-		let dataFinded = dataContacts.filter(data => {
-			return data.phoneNumber.toString().indexOf(inputFind) > -1;
-		})
-		console.log(dataFinded.length === 0 ? "Can't find the contact" : dataFinded);
-	} else {
-		console.log('Input wrong');
-		findContact();
-	}
+function searchContact() {
+  var content = readContact();
+  var searchText = readlineSync.question('Nhập nội dung cần tìm kiếm:');
+  let resultContact = content.filter(object => {
+    return JSON.stringify(object)
+      .toString()
+      .toLowerCase()
+      .includes(searchText);
+  });
+  return resultContact;
 }
-
-var input = [
-			{'id':1,
-			'name':'Will Smith',
-			'email':'mailabc.com',
-			'phones':[
-						{'label':'Mobile','phoneNumber':['0222222222','0222222222']},
-						{'label':'Phone','phoneNumber':['0222222222','0222222222']}
-					 ]
-		  	},
-			{'id':2,
-			'name':'Will Smith 2',
-			'email':'mailabc2@gmail.com',
-			'phones':[
-						{'label':'Mobile','phoneNumber':['01111111111111','0222222222']},
-						{'label':'Phone','phoneNumber':['0222222222','0222222222']}
-					 ]
-		  	},
-			{'id':3,
-			'name':'Will Smith 3',
-			'email':'mailabc3@gmail.com',
-			'phones':[
-						{'label':'Mobile','phoneNumber':['0222222222','0222222222']},
-						{'label':'Phone','phoneNumber':['0222222222','0222222222']}
-					 ]
-		  	}
-];
+displayMenu();
